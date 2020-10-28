@@ -3,9 +3,9 @@
 YouTube Video player plugin.
 """
 
-import HTMLParser
+from html.parser import HTMLParser
 import json
-import httplib
+import http
 import re
 import textwrap
 import urllib
@@ -124,7 +124,7 @@ class YoutubePlayer(BaseVideoPlayer):
                       'Error: {}'.format(str(exception))
             return available_languages, message
 
-        if data.status_code == httplib.OK and data.text:
+        if data.status_code == http.client.OK and data.text:
             youtube_data = etree.fromstring(data.content, parser=utf8_parser)
             empty_subs = False if [el.get('transcript_list') for el in youtube_data] else True
             available_languages = [
@@ -194,7 +194,7 @@ class YoutubePlayer(BaseVideoPlayer):
         Format transcript's element in order for it to be converted to WebVTT format.
         """
         sub_element = u"\n\n"
-        html_parser = HTMLParser.HTMLParser()
+        html_parser = HTMLParser()
         if element.tag == "text":
             start = float(element.get("start"))
             duration = float(element.get("dur", 0))  # dur is not mandatory
